@@ -13,7 +13,7 @@ namespace minimal_api.Domain.Entities
         public string Name { get; set; } = default!;
 
         [StringLength(100)]
-        public string Marca { get; set; } = default!;
+        public string Brand { get; set; } = default!;
 
         [Required]
         public int Ano { get; set; } = default!;
