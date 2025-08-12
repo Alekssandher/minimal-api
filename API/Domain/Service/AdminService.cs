@@ -23,14 +23,14 @@ namespace minimal_api.Domain.Service
 
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            var result = query.Select(adm => new AdminModelView( adm.Email, adm.Profile) );
+            var result = query.Select(adm => new AdminModelView( adm.Id, adm.Email, adm.Profile) );
             return [..result];
         }
 
         public AdminModelView FindById(int id)
         {
             var result = _context.Admins.Find(id) ?? throw new Exception("Not Found");
-            return new AdminModelView(result.Email, result.Profile);
+            return new AdminModelView(result.Id, result.Email, result.Profile);
         }
 
         public void Include(Admin admin)
