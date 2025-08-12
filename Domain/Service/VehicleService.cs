@@ -20,7 +20,7 @@ namespace minimal_api.Domain.Service
             if (!string.IsNullOrEmpty(name))
             {
                 query = query.Where(v =>
-                    v.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)
+                    v.Name.Contains(name)
 
                 );
             }
@@ -28,15 +28,15 @@ namespace minimal_api.Domain.Service
             if (!string.IsNullOrEmpty(brand))
             {
                 query = query.Where(v =>
-                    v.Brand.Contains(brand, StringComparison.CurrentCultureIgnoreCase)
+                    v.Brand.Contains(brand)
                 );
             }
 
             int pageSize = 10;
 
-            return [.. query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)];
+            query = query.Skip((page -1) * pageSize).Take(pageSize);
+            
+            return [.. query];
         }
 
         public void Delete(Vehicle vehicle)

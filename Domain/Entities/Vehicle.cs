@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using minimal_api.Domain.DTOs;
 
 namespace minimal_api.Domain.Entities
 {
@@ -16,8 +17,14 @@ namespace minimal_api.Domain.Entities
         public string Brand { get; set; } = default!;
 
         [Required]
-        public int Ano { get; set; } = default!;
+        public int Year { get; set; } = default!;
 
 
+        public void Update(VehicleDto dto)
+        {
+            Name = dto.Name;
+            Brand = dto.Brand;
+            Year = dto.Year;
+        }
     }
 }
