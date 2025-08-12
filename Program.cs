@@ -1,9 +1,12 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using minimal_api.Domain.DTOs;
 using minimal_api.Domain.Interfaces;
 using minimal_api.Domain.ModelViews;
@@ -13,6 +16,26 @@ using Scalar.AspNetCore;
 
 #region Builder
 var builder = WebApplication.CreateBuilder(args);
+
+string jwtKey = builder.Configuration["JwtSettings:Key"] ?? throw new Exception("Jwt key is missing in AppSettings");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "alek@hotmail.com",
+            ValidAudience = "alek@hotmail.com",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthorization();
 
 builder.Services.AddOpenApi(options =>
             {
@@ -64,12 +87,12 @@ app.MapGet("admin", ([FromQuery] [DefaultValue(1)] int page, IAdminService ias) 
     var result = ias.All(page);
 
     return Results.Ok(result);
-}).WithTags("Admins");
+}).RequireAuthorization().WithTags("Admins");
 
 app.MapGet("admin/{id}", ([FromRoute] int id, IAdminService ias) =>
 {
     return Results.Ok(ias.FindById(id));
-}).WithTags("Admins");
+}).RequireAuthorization().WithTags("Admins");
 
 app.MapPost("admin/create", ([FromBody] AdminDto adminDto, IAdminService ias) =>
 {
@@ -93,7 +116,7 @@ app.MapPost("admin/create", ([FromBody] AdminDto adminDto, IAdminService ias) =>
 
     return Results.Ok();
 
-}).WithTags("Admins");
+}).RequireAuthorization().WithTags("Admins");
 #endregion
 
 #region Vehicles
