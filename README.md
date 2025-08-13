@@ -219,10 +219,3 @@ ENTRYPOINT ["dotnet", "minimal-api.dll"]
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
 
-## 📞 Suporte
-
-Para suporte e questões, por favor abra uma issue no repositório ou entre em contato com a equipe de desenvolvimento.
-
----
-
-**Construído com ❤️ usando .NET 9 Minimal APIs**
